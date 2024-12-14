@@ -8,12 +8,20 @@ import Contact from "./components/contact";
 //createBrowserRouter是一个函数，返回一个路由配置对象
 //RouterProvider是一个组件，接受一个router配置对象作为参数
 
+import { loader as RootLoader } from "./components/root";
+
 //router是路由的配置对象
 const router = createBrowserRouter([
-  { path: "/", element: <Root />, errorElement: <ErrorPage /> },
+  // 路由配置
   {
-    path: "/contacts/:id",
-    element: <Contact />,
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    loader: RootLoader,
+    children: [
+      { path: "contacts/:id", element: <Contact /> },
+      //children可以成为一个子路由
+    ],
   },
 ]);
 //:id 是一个参数的名字但是以后访问要按照这个名称来

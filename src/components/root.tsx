@@ -1,4 +1,34 @@
+import { FC } from "react";
+import { Outlet, Link, useLoaderData } from "react-router-dom";
+import { getContacts } from "@/contacts";
+//这是react-router-dom提供的一个组件，用来渲染子路由的
 export default function Root() {
+  const contacts = useLoaderData() as ContactType[];
+  const renderContacts = () => {
+    if (contacts.length === 0) {
+      return <p>No contacts found</p>;
+    }
+    return (
+      <ul>
+        {contacts.map((item) => {
+          return (
+            <li key={item.id}>
+              <Link to={"/contacts/" + item.id}>
+                {item.first || item.last ? (
+                  <>
+                    {item.first}
+                    {item.last}
+                  </>
+                ) : (
+                  <>No name</>
+                )}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
   return (
     <>
       <div id="sidebar">
@@ -22,15 +52,27 @@ export default function Root() {
         <nav>
           <ul>
             <li>
-              <a href={`/contacts/1`}>Your Name</a>
+              {/* <a href={`/contacts/1`}>Your Name</a>
+               */}
+              <Link to="/contacts/1">Your Name</Link>
             </li>
             <li>
-              <a href={`/contacts/2`}>Your Friend</a>
+              {/* <a href={`/contacts/2`}>Your Friend</a> */}
+              <Link to="/contacts/2">Your Friend</Link>
             </li>
           </ul>
         </nav>
       </div>
-      <div id="detail"></div>
+      <div id="detail">
+        <Outlet />
+      </div>
+      <nav>{renderContacts()}</nav>
     </>
   );
 }
+//当前路由组件需要用到的loader函数
+export const loader = () => {
+  const contacts = getContacts();
+  return contacts;
+};
+//Link 可以使用to来指定跳转的路径
